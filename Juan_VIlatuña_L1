@@ -1,0 +1,98 @@
+
+/*
+ *                   UNIVERSIDAD TÉCNICA DEL NORTE
+ *                    JUAN CARLOS VILATUÑA ROMO
+ *                            CITEL
+ *              LABORATORIO N°1: PUERTOS DE ENTRADA Y SALIDA
+ * 
+ */
+#include<LiquidCrystal.h> 
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2); 
+int foto = 7;  
+int fotore = 6;   
+int val = 0; 
+int led=13;
+int cont = 0; 
+int content1 = 0;   
+int total =0;
+void setup()
+{
+  Serial.begin(9600);            
+  pinMode(foto, INPUT);
+  pinMode(fotore, INPUT);
+  lcd.begin(16,2);
+  pinMode (led,OUTPUT);
+  lcd.setCursor(0,0);            
+  lcd.print("PERSONAS :  "); 
+  
+}
+
+void loop()
+{
+   val=digitalRead(foto);
+  if(val!=1)
+  {
+    cont++; 
+    total++;
+     while(digitalRead(foto)!=1) {
+        delay(100);     
+      }
+    lcd.setCursor(10,0); 
+    lcd.print(cont); 
+    lcd.setCursor(0,1);
+    lcd.println("TOTAL: ");
+    lcd.setCursor(7,1); 
+    lcd.print(total);
+   if(cont==30){
+          lcd.clear();
+          lcd.setCursor(3,1); 
+          lcd.println("BUS LLENO   ");
+          digitalWrite(led,1);
+          delay (2000);           
+          cont=0;          
+          lcd.clear();
+          digitalWrite(led,0);
+          lcd.setCursor(0,0);            
+          lcd.print("PERSONAS: 0");
+          lcd.setCursor(0,1);
+          lcd.print("TOTAL: "); 
+          lcd.setCursor(7,1);
+          lcd.print(total);
+          
+}
+  }else{
+
+    val=digitalRead(fotore);
+
+    if(val!=1)
+  {
+    cont=cont-1; 
+    total=total-1;
+     while(digitalRead(fotore)!=1) {
+        delay(100);     
+      }
+    lcd.setCursor(10,0); 
+    lcd.print(cont); 
+    lcd.setCursor(0,1);
+    lcd.println("TOTAL: ");
+    lcd.setCursor(7,1); 
+    lcd.print(total);
+   if(cont==0){
+          lcd.clear();
+          lcd.setCursor(3,1); 
+          lcd.println("BUS VACIO  ");
+          digitalWrite(led,1);
+          delay (2000);           
+          cont=0;          
+          lcd.clear();
+          digitalWrite(led,0);
+          lcd.setCursor(0,0);            
+          lcd.print("PERSONAS: 0");
+          lcd.setCursor(0,1);
+          lcd.print("TOTAL: "); 
+          lcd.setCursor(7,1);
+          lcd.print(total);
+          }
+      }
+   }
+}
